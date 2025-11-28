@@ -2,8 +2,8 @@
 /**
  * Plugin Name: My Web Tools Collection
  * Plugin URI: https://reviewx.app/
- * Description: 20 useful web tools. Shortcodes: [qr_code_tool], [word_counter_tool], [password_gen_tool], [discount_calc_tool], [age_calc_tool], [stopwatch_tool], [tip_calc_tool], [case_converter_tool], [bmi_calc_tool], [digital_clock_tool], [click_counter_tool], [random_num_tool], [loan_calc_tool], [temp_converter_tool], [binary_text_tool], [day_calc_tool], [aspect_ratio_tool], [hex_rgb_tool], [roman_num_tool], [palindrome_tool].
- * Version: 1.6
+ * Description: 25 useful web tools including QR Code, BMI, Stopwatch, Pomodoro, and more.
+ * Version: 1.7
  * Author: Mrzahidbd
  * Author URI: https://reviewx.app/
  * License: GPL2
@@ -751,26 +751,247 @@ function mwts_palindrome_shortcode() {
 }
 add_shortcode('palindrome_tool', 'mwts_palindrome_shortcode');
 
+// =========================================================
+// 21. Text Reverser (NEW) - [text_reverser_tool]
+// =========================================================
+function mwts_text_reverser_shortcode() {
+    ob_start();
+    ?>
+    <div class="mwts-tool-wrapper">
+        <div class="mwts-card">
+            <h3>Text Reverser</h3>
+            <input type="text" id="mwts-rev-in" class="mwts-input" placeholder="Type something..." oninput="mwtsReverseText()">
+            <div id="mwts-rev-res" style="margin-top:20px; font-size:20px; font-weight:bold; color:#4f46e5; word-wrap:break-word;"></div>
+        </div>
+    </div>
+    <script>
+        function mwtsReverseText() {
+            const str = document.getElementById("mwts-rev-in").value;
+            document.getElementById("mwts-rev-res").innerText = str.split('').reverse().join('');
+        }
+    </script>
+    <?php
+    mwts_load_common_styles();
+    return ob_get_clean();
+}
+add_shortcode('text_reverser_tool', 'mwts_text_reverser_shortcode');
 
 // =========================================================
-// Common Styles
+// 22. Vowel Counter (NEW) - [vowel_counter_tool]
+// =========================================================
+function mwts_vowel_counter_shortcode() {
+    ob_start();
+    ?>
+    <div class="mwts-tool-wrapper">
+        <div class="mwts-card">
+            <h3>Vowel Counter</h3>
+            <textarea id="mwts-vow-in" class="mwts-input" rows="4" placeholder="Type text here..." oninput="mwtsCountVowels()"></textarea>
+            <div id="mwts-vow-res" style="margin-top:20px; font-size:24px; font-weight:bold; color:#10b981;">0 Vowels</div>
+        </div>
+    </div>
+    <script>
+        function mwtsCountVowels() {
+            const str = document.getElementById("mwts-vow-in").value;
+            const count = (str.match(/[aeiou]/gi) || []).length;
+            document.getElementById("mwts-vow-res").innerText = count + " Vowels";
+        }
+    </script>
+    <?php
+    mwts_load_common_styles();
+    return ob_get_clean();
+}
+add_shortcode('vowel_counter_tool', 'mwts_vowel_counter_shortcode');
+
+// =========================================================
+// 23. Pomodoro Timer (NEW) - [pomodoro_tool]
+// =========================================================
+function mwts_pomodoro_shortcode() {
+    ob_start();
+    ?>
+    <div class="mwts-tool-wrapper">
+        <div class="mwts-card">
+            <h3>Pomodoro Timer</h3>
+            <div id="mwts-pomo-display" style="font-size: 50px; font-family: monospace; font-weight:bold; color:#2d3748; margin:20px 0;">25:00</div>
+            <button onclick="mwtsStartPomo()" id="mwts-pomo-btn" class="mwts-btn" style="background-color:#e11d48;">Start Focus</button>
+            <button onclick="mwtsResetPomo()" class="mwts-btn mwts-btn-outline" style="margin-top:10px;">Reset</button>
+        </div>
+    </div>
+    <script>
+        let pomoTimer;
+        let pomoTime = 25 * 60;
+        let pomoRunning = false;
+
+        function mwtsUpdatePomoDisplay() {
+            const m = Math.floor(pomoTime / 60).toString().padStart(2,'0');
+            const s = (pomoTime % 60).toString().padStart(2,'0');
+            document.getElementById("mwts-pomo-display").innerText = `${m}:${s}`;
+        }
+
+        function mwtsStartPomo() {
+            const btn = document.getElementById("mwts-pomo-btn");
+            if(pomoRunning) {
+                clearInterval(pomoTimer);
+                btn.innerText = "Resume Focus";
+                pomoRunning = false;
+            } else {
+                pomoTimer = setInterval(() => {
+                    if(pomoTime > 0) {
+                        pomoTime--;
+                        mwtsUpdatePomoDisplay();
+                    } else {
+                        clearInterval(pomoTimer);
+                        alert("Time's up! Take a break.");
+                        mwtsResetPomo();
+                    }
+                }, 1000);
+                btn.innerText = "Pause";
+                pomoRunning = true;
+            }
+        }
+
+        function mwtsResetPomo() {
+            clearInterval(pomoTimer);
+            pomoTime = 25 * 60;
+            pomoRunning = false;
+            mwtsUpdatePomoDisplay();
+            document.getElementById("mwts-pomo-btn").innerText = "Start Focus";
+        }
+    </script>
+    <?php
+    mwts_load_common_styles();
+    return ob_get_clean();
+}
+add_shortcode('pomodoro_tool', 'mwts_pomodoro_shortcode');
+
+// =========================================================
+// 24. Gradient Generator (NEW) - [gradient_gen_tool]
+// =========================================================
+function mwts_gradient_gen_shortcode() {
+    ob_start();
+    ?>
+    <div class="mwts-tool-wrapper">
+        <div class="mwts-card">
+            <h3>Gradient Generator</h3>
+            <div id="mwts-grad-preview" style="height:100px; width:100%; border-radius:8px; margin-bottom:15px; background: linear-gradient(to right, #4f46e5, #ec4899);"></div>
+            <div style="display:flex; gap:10px;">
+                <input type="color" id="mwts-grad-c1" value="#4f46e5" style="width:100%; height:40px; cursor:pointer;" oninput="mwtsUpdateGrad()">
+                <input type="color" id="mwts-grad-c2" value="#ec4899" style="width:100%; height:40px; cursor:pointer;" oninput="mwtsUpdateGrad()">
+            </div>
+            <textarea id="mwts-grad-code" class="mwts-input" rows="2" style="margin-top:15px; font-size:12px;" readonly>background: linear-gradient(to right, #4f46e5, #ec4899);</textarea>
+        </div>
+    </div>
+    <script>
+        function mwtsUpdateGrad() {
+            const c1 = document.getElementById("mwts-grad-c1").value;
+            const c2 = document.getElementById("mwts-grad-c2").value;
+            const code = `background: linear-gradient(to right, ${c1}, ${c2});`;
+            document.getElementById("mwts-grad-preview").style = code;
+            document.getElementById("mwts-grad-code").value = code;
+        }
+    </script>
+    <?php
+    mwts_load_common_styles();
+    return ob_get_clean();
+}
+add_shortcode('gradient_gen_tool', 'mwts_gradient_gen_shortcode');
+
+// =========================================================
+// 25. Password Strength Checker (NEW) - [pass_strength_tool]
+// =========================================================
+function mwts_pass_strength_shortcode() {
+    ob_start();
+    ?>
+    <div class="mwts-tool-wrapper">
+        <div class="mwts-card">
+            <h3>Password Strength</h3>
+            <input type="password" id="mwts-ps-in" class="mwts-input" placeholder="Type password..." oninput="mwtsCheckStrength()">
+            <div id="mwts-ps-bar" style="height:5px; width:0%; background:red; transition:0.3s; margin-top:5px; border-radius:3px;"></div>
+            <p id="mwts-ps-text" style="margin-top:10px; font-weight:bold; color:gray;">Enter password</p>
+        </div>
+    </div>
+    <script>
+        function mwtsCheckStrength() {
+            const p = document.getElementById("mwts-ps-in").value;
+            const bar = document.getElementById("mwts-ps-bar");
+            const txt = document.getElementById("mwts-ps-text");
+            let score = 0;
+            if(p.length > 5) score++;
+            if(p.length > 10) score++;
+            if(/[A-Z]/.test(p)) score++;
+            if(/[0-9]/.test(p)) score++;
+            if(/[^A-Za-z0-9]/.test(p)) score++;
+
+            if(p.length === 0) { bar.style.width="0%"; txt.innerText=""; return; }
+
+            const colors = ["red", "orange", "yellow", "blue", "green"];
+            const labels = ["Very Weak", "Weak", "Medium", "Strong", "Very Strong"];
+            
+            let idx = score - 1;
+            if(idx < 0) idx = 0;
+            
+            bar.style.width = ((idx+1)*20) + "%";
+            bar.style.background = colors[idx];
+            txt.innerText = labels[idx];
+            txt.style.color = colors[idx];
+        }
+    </script>
+    <?php
+    mwts_load_common_styles();
+    return ob_get_clean();
+}
+add_shortcode('pass_strength_tool', 'mwts_pass_strength_shortcode');
+
+
+// =========================================================
+// Common Styles (Updated for better UI)
 // =========================================================
 function mwts_load_common_styles() {
     ?>
     <style>
-        .mwts-tool-wrapper { font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; margin: 20px 0; }
-        .mwts-card { background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e1e4e8; width: 100%; max-width: 450px; text-align: center; }
-        .mwts-card h3 { margin: 0 0 15px 0; color: #2d3748; font-size: 22px; }
-        .mwts-card label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; text-align: left; }
-        .mwts-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        .mwts-input:focus { border-color: #4f46e5; outline: none; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2); }
-        .mwts-btn { background-color: #4f46e5; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: 600; width: 100%; transition: 0.2s; }
-        .mwts-btn:hover { opacity: 0.9; }
-        .mwts-btn-outline { background-color: transparent; border: 1px solid #4f46e5; color: #4f46e5; }
-        .mwts-btn-outline:hover { background-color: #f3f4f6; }
-        .mwts-stat-box { background: #f7fafc; padding: 10px; border-radius: 8px; flex: 1; border: 1px solid #edf2f7; }
-        .mwts-stat-num { display: block; font-size: 24px; font-weight: bold; color: #4f46e5; }
-        .mwts-stat-label { font-size: 12px; color: #666; }
+        .mwts-tool-wrapper { font-family: 'Segoe UI', Tahoma, sans-serif; display: flex; justify-content: center; margin: 30px 0; }
+        .mwts-card { 
+            background: #ffffff; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            border: 1px solid #f0f0f0; 
+            width: 100%; 
+            max-width: 450px; 
+            text-align: center; 
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .mwts-card:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+        .mwts-card h3 { margin: 0 0 20px 0; color: #1f2937; font-size: 24px; font-weight: 700; }
+        .mwts-card label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; text-align: left; color: #4b5563; }
+        .mwts-input { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 12px; 
+            border: 2px solid #e5e7eb; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 16px; 
+            transition: border-color 0.2s;
+        }
+        .mwts-input:focus { border-color: #4f46e5; outline: none; }
+        .mwts-btn { 
+            background-color: #4f46e5; 
+            color: white; 
+            border: none; 
+            padding: 12px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: 600; 
+            width: 100%; 
+            transition: background-color 0.2s; 
+        }
+        .mwts-btn:hover { background-color: #4338ca; }
+        .mwts-btn-outline { background-color: transparent; border: 2px solid #4f46e5; color: #4f46e5; }
+        .mwts-btn-outline:hover { background-color: #eff6ff; }
+        .mwts-stat-box { background: #f3f4f6; padding: 15px; border-radius: 8px; flex: 1; }
+        .mwts-stat-num { display: block; font-size: 28px; font-weight: bold; color: #4f46e5; }
+        .mwts-stat-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
     </style>
     <?php
 }

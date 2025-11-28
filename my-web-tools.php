@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: My Web Tools Collection
- * Plugin URI: https://yourwebsite.com/
- * Description: 16 useful web tools. Shortcodes: [qr_code_tool], [word_counter_tool], [password_gen_tool], [discount_calc_tool], [age_calc_tool], [stopwatch_tool], [tip_calc_tool], [case_converter_tool], [bmi_calc_tool], [digital_clock_tool], [click_counter_tool], [random_num_tool], [loan_calc_tool], [temp_converter_tool], [binary_text_tool], [day_calc_tool].
- * Version: 1.4
- * Author: Your Name
- * Author URI: https://yourwebsite.com/
+ * Plugin URI: https://reviewx.app/
+ * Description: 20 useful web tools. Shortcodes: [qr_code_tool], [word_counter_tool], [password_gen_tool], [discount_calc_tool], [age_calc_tool], [stopwatch_tool], [tip_calc_tool], [case_converter_tool], [bmi_calc_tool], [digital_clock_tool], [click_counter_tool], [random_num_tool], [loan_calc_tool], [temp_converter_tool], [binary_text_tool], [day_calc_tool], [aspect_ratio_tool], [hex_rgb_tool], [roman_num_tool], [palindrome_tool].
+ * Version: 1.6
+ * Author: Mrzahidbd
+ * Author URI: https://reviewx.app/
  * License: GPL2
  */
 
@@ -463,7 +463,7 @@ function mwts_random_num_shortcode() {
 add_shortcode('random_num_tool', 'mwts_random_num_shortcode');
 
 // =========================================================
-// 13. Loan Calculator (NEW) - [loan_calc_tool]
+// 13. Loan Calculator - [loan_calc_tool]
 // =========================================================
 function mwts_loan_calc_shortcode() {
     ob_start();
@@ -503,7 +503,7 @@ function mwts_loan_calc_shortcode() {
 add_shortcode('loan_calc_tool', 'mwts_loan_calc_shortcode');
 
 // =========================================================
-// 14. Temperature Converter (NEW) - [temp_converter_tool]
+// 14. Temperature Converter - [temp_converter_tool]
 // =========================================================
 function mwts_temp_converter_shortcode() {
     ob_start();
@@ -546,7 +546,7 @@ function mwts_temp_converter_shortcode() {
 add_shortcode('temp_converter_tool', 'mwts_temp_converter_shortcode');
 
 // =========================================================
-// 15. Binary <-> Text Converter (NEW) - [binary_text_tool]
+// 15. Binary <-> Text Converter - [binary_text_tool]
 // =========================================================
 function mwts_binary_text_shortcode() {
     ob_start();
@@ -587,7 +587,7 @@ function mwts_binary_text_shortcode() {
 add_shortcode('binary_text_tool', 'mwts_binary_text_shortcode');
 
 // =========================================================
-// 16. Day of the Week (NEW) - [day_calc_tool]
+// 16. Day of the Week - [day_calc_tool]
 // =========================================================
 function mwts_day_calc_shortcode() {
     ob_start();
@@ -615,6 +615,141 @@ function mwts_day_calc_shortcode() {
     return ob_get_clean();
 }
 add_shortcode('day_calc_tool', 'mwts_day_calc_shortcode');
+
+// =========================================================
+// 17. Aspect Ratio Calculator - [aspect_ratio_tool]
+// =========================================================
+function mwts_aspect_ratio_shortcode() {
+    ob_start();
+    ?>
+    <div class="mwts-tool-wrapper">
+        <div class="mwts-card">
+            <h3>Aspect Ratio Calculator</h3>
+            <div style="display:flex; gap:10px;">
+                <div style="flex:1;"><label>Width</label><input type="number" id="mwts-ar-w" class="mwts-input" placeholder="1920"></div>
+                <div style="flex:1;"><label>Height</label><input type="number" id="mwts-ar-h" class="mwts-input" placeholder="1080"></div>
+            </div>
+            <button onclick="mwtsCalcRatio()" class="mwts-btn" style="margin-top:10px;">Find Ratio</button>
+            <div id="mwts-ar-result" style="margin-top:20px; font-size:24px; font-weight:bold; color:#4f46e5;"></div>
+        </div>
+    </div>
+    <script>
+        function mwtsGcd(a, b) { return b == 0 ? a : mwtsGcd(b, a % b); }
+        function mwtsCalcRatio() {
+            const w = parseInt(document.getElementById("mwts-ar-w").value);
+            const h = parseInt(document.getElementById("mwts-ar-h").value);
+            if(!w || !h) return;
+            const r = mwtsGcd(w, h);
+            document.getElementById("mwts-ar-result").innerText = (w/r) + ":" + (h/r);
+        }
+    </script>
+    <?php
+    mwts_load_common_styles();
+    return ob_get_clean();
+}
+add_shortcode('aspect_ratio_tool', 'mwts_aspect_ratio_shortcode');
+
+// =========================================================
+// 18. Hex to RGB Converter - [hex_rgb_tool]
+// =========================================================
+function mwts_hex_rgb_shortcode() {
+    ob_start();
+    ?>
+    <div class="mwts-tool-wrapper">
+        <div class="mwts-card">
+            <h3>Hex to RGB Converter</h3>
+            <label>Hex Code</label>
+            <input type="text" id="mwts-hex-in" class="mwts-input" placeholder="#FFFFFF">
+            <button onclick="mwtsHexToRgb()" class="mwts-btn" style="margin-top:10px;">Convert</button>
+            <div id="mwts-hex-result" style="margin-top:20px; font-size:20px; font-weight:bold; color:#333;"></div>
+        </div>
+    </div>
+    <script>
+        function mwtsHexToRgb() {
+            let hex = document.getElementById("mwts-hex-in").value.replace('#','');
+            if(hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
+            if(hex.length !== 6) { document.getElementById("mwts-hex-result").innerText = "Invalid Hex"; return; }
+            const r = parseInt(hex.substring(0,2), 16);
+            const g = parseInt(hex.substring(2,4), 16);
+            const b = parseInt(hex.substring(4,6), 16);
+            document.getElementById("mwts-hex-result").innerText = `rgb(${r}, ${g}, ${b})`;
+            document.getElementById("mwts-hex-result").style.color = `rgb(${r}, ${g}, ${b})`;
+        }
+    </script>
+    <?php
+    mwts_load_common_styles();
+    return ob_get_clean();
+}
+add_shortcode('hex_rgb_tool', 'mwts_hex_rgb_shortcode');
+
+// =========================================================
+// 19. Roman Numeral Converter - [roman_num_tool]
+// =========================================================
+function mwts_roman_num_shortcode() {
+    ob_start();
+    ?>
+    <div class="mwts-tool-wrapper">
+        <div class="mwts-card">
+            <h3>Roman Numeral Converter</h3>
+            <label>Enter Number</label>
+            <input type="number" id="mwts-roman-in" class="mwts-input" placeholder="e.g. 2024">
+            <button onclick="mwtsToRoman()" class="mwts-btn" style="margin-top:10px;">Convert</button>
+            <div id="mwts-roman-result" style="margin-top:20px; font-size:24px; font-weight:bold; color:#4f46e5;"></div>
+        </div>
+    </div>
+    <script>
+        function mwtsToRoman() {
+            let num = parseInt(document.getElementById("mwts-roman-in").value);
+            if(!num || num < 1 || num > 3999) { document.getElementById("mwts-roman-result").innerText = "Enter 1-3999"; return; }
+            const lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1};
+            let roman = '';
+            for(let i in lookup) {
+                while(num >= lookup[i]) { roman += i; num -= lookup[i]; }
+            }
+            document.getElementById("mwts-roman-result").innerText = roman;
+        }
+    </script>
+    <?php
+    mwts_load_common_styles();
+    return ob_get_clean();
+}
+add_shortcode('roman_num_tool', 'mwts_roman_num_shortcode');
+
+// =========================================================
+// 20. Palindrome Checker - [palindrome_tool]
+// =========================================================
+function mwts_palindrome_shortcode() {
+    ob_start();
+    ?>
+    <div class="mwts-tool-wrapper">
+        <div class="mwts-card">
+            <h3>Palindrome Checker</h3>
+            <p>Check if text reads the same backward</p>
+            <input type="text" id="mwts-pal-in" class="mwts-input" placeholder="e.g. madam">
+            <button onclick="mwtsCheckPal()" class="mwts-btn" style="margin-top:10px;">Check</button>
+            <div id="mwts-pal-result" style="margin-top:20px; font-weight:bold;"></div>
+        </div>
+    </div>
+    <script>
+        function mwtsCheckPal() {
+            const str = document.getElementById("mwts-pal-in").value.toLowerCase().replace(/[^a-z0-9]/g, '');
+            if(!str) return;
+            const rev = str.split('').reverse().join('');
+            const res = document.getElementById("mwts-pal-result");
+            if(str === rev) {
+                res.innerText = "Yes! It is a Palindrome.";
+                res.style.color = "green";
+            } else {
+                res.innerText = "No, it's not.";
+                res.style.color = "red";
+            }
+        }
+    </script>
+    <?php
+    mwts_load_common_styles();
+    return ob_get_clean();
+}
+add_shortcode('palindrome_tool', 'mwts_palindrome_shortcode');
 
 
 // =========================================================

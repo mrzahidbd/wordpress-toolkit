@@ -2,8 +2,8 @@
 /**
  * Plugin Name: My Web Tools Collection
  * Plugin URI: https://reviewx.app/
- * Description: 25 useful web tools including QR Code, BMI, Stopwatch, Pomodoro, and more.
- * Version: 1.7
+ * Description: 25 useful web tools including QR Code, BMI, Stopwatch, Pomodoro, and more. Go to "My Web Tools" menu for shortcodes.
+ * Version: 1.8
  * Author: Mrzahidbd
  * Author URI: https://reviewx.app/
  * License: GPL2
@@ -12,6 +12,81 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+// =========================================================
+// ADMIN MENU: DASHBOARD PAGE
+// =========================================================
+function mwts_add_admin_menu() {
+    add_menu_page(
+        'My Web Tools',          // Page Title
+        'My Web Tools',          // Menu Title
+        'manage_options',        // Capability
+        'my-web-tools-help',     // Menu Slug
+        'mwts_render_admin_page',// Callback Function
+        'dashicons-hammer',      // Icon
+        25                       // Position
+    );
+}
+add_action('admin_menu', 'mwts_add_admin_menu');
+
+function mwts_render_admin_page() {
+    $tools = [
+        ['name' => 'QR Code Generator', 'desc' => 'Generate QR codes from text or URLs.', 'shortcode' => '[qr_code_tool]'],
+        ['name' => 'Word Counter', 'desc' => 'Count words and characters in text.', 'shortcode' => '[word_counter_tool]'],
+        ['name' => 'Password Generator', 'desc' => 'Create strong, secure passwords.', 'shortcode' => '[password_gen_tool]'],
+        ['name' => 'Discount Calculator', 'desc' => 'Calculate sales price and savings.', 'shortcode' => '[discount_calc_tool]'],
+        ['name' => 'Age Calculator', 'desc' => 'Calculate age from date of birth.', 'shortcode' => '[age_calc_tool]'],
+        ['name' => 'Stopwatch', 'desc' => 'Track time with start, stop, and reset.', 'shortcode' => '[stopwatch_tool]'],
+        ['name' => 'Tip Calculator', 'desc' => 'Calculate tip amount and total bill.', 'shortcode' => '[tip_calc_tool]'],
+        ['name' => 'Case Converter', 'desc' => 'Convert text to Upper, Lower, or Capitalized.', 'shortcode' => '[case_converter_tool]'],
+        ['name' => 'BMI Calculator', 'desc' => 'Check Body Mass Index from height/weight.', 'shortcode' => '[bmi_calc_tool]'],
+        ['name' => 'Digital Clock', 'desc' => 'Show current live time and date.', 'shortcode' => '[digital_clock_tool]'],
+        ['name' => 'Click Counter / Tasbeeh', 'desc' => 'Simple counter for counting items.', 'shortcode' => '[click_counter_tool]'],
+        ['name' => 'Random Number Gen', 'desc' => 'Generate a random number in a range.', 'shortcode' => '[random_num_tool]'],
+        ['name' => 'Loan Calculator', 'desc' => 'Calculate monthly loan installments.', 'shortcode' => '[loan_calc_tool]'],
+        ['name' => 'Temp. Converter', 'desc' => 'Convert between Celsius and Fahrenheit.', 'shortcode' => '[temp_converter_tool]'],
+        ['name' => 'Binary Converter', 'desc' => 'Convert text to binary code and back.', 'shortcode' => '[binary_text_tool]'],
+        ['name' => 'Day of the Week', 'desc' => 'Find out the day name from a date.', 'shortcode' => '[day_calc_tool]'],
+        ['name' => 'Aspect Ratio Calc', 'desc' => 'Calculate aspect ratio for screens/images.', 'shortcode' => '[aspect_ratio_tool]'],
+        ['name' => 'Hex to RGB', 'desc' => 'Convert Hex color codes to RGB format.', 'shortcode' => '[hex_rgb_tool]'],
+        ['name' => 'Roman Numeral', 'desc' => 'Convert numbers to Roman numerals.', 'shortcode' => '[roman_num_tool]'],
+        ['name' => 'Palindrome Checker', 'desc' => 'Check if a word is a palindrome.', 'shortcode' => '[palindrome_tool]'],
+        ['name' => 'Text Reverser', 'desc' => 'Reverse any text string instantly.', 'shortcode' => '[text_reverser_tool]'],
+        ['name' => 'Vowel Counter', 'desc' => 'Count vowels in a sentence.', 'shortcode' => '[vowel_counter_tool]'],
+        ['name' => 'Pomodoro Timer', 'desc' => '25-minute focus timer for productivity.', 'shortcode' => '[pomodoro_tool]'],
+        ['name' => 'Gradient Generator', 'desc' => 'Create CSS gradients with two colors.', 'shortcode' => '[gradient_gen_tool]'],
+        ['name' => 'Password Strength', 'desc' => 'Check how strong a password is.', 'shortcode' => '[pass_strength_tool]'],
+    ];
+
+    ?>
+    <div class="wrap">
+        <h1>My Web Tools - Documentation</h1>
+        <p>Copy the <strong>Shortcode</strong> and paste it into any Page or Post to display the tool.</p>
+        
+        <table class="wp-list-table widefat fixed striped">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">Tool Name</th>
+                    <th style="width: 50%;">Description</th>
+                    <th style="width: 30%;">Shortcode</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($tools as $tool): ?>
+                <tr>
+                    <td style="font-weight:bold; color:#4f46e5;"><?php echo esc_html($tool['name']); ?></td>
+                    <td><?php echo esc_html($tool['desc']); ?></td>
+                    <td>
+                        <input type="text" value="<?php echo esc_attr($tool['shortcode']); ?>" readonly onclick="this.select()" style="width:100%; background:#f0f0f1; border:1px solid #ddd; padding:5px; text-align:center;">
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php
+}
+
 
 // =========================================================
 // 1. QR Code Generator - [qr_code_tool]
@@ -752,7 +827,7 @@ function mwts_palindrome_shortcode() {
 add_shortcode('palindrome_tool', 'mwts_palindrome_shortcode');
 
 // =========================================================
-// 21. Text Reverser (NEW) - [text_reverser_tool]
+// 21. Text Reverser - [text_reverser_tool]
 // =========================================================
 function mwts_text_reverser_shortcode() {
     ob_start();
@@ -777,7 +852,7 @@ function mwts_text_reverser_shortcode() {
 add_shortcode('text_reverser_tool', 'mwts_text_reverser_shortcode');
 
 // =========================================================
-// 22. Vowel Counter (NEW) - [vowel_counter_tool]
+// 22. Vowel Counter - [vowel_counter_tool]
 // =========================================================
 function mwts_vowel_counter_shortcode() {
     ob_start();
@@ -803,7 +878,7 @@ function mwts_vowel_counter_shortcode() {
 add_shortcode('vowel_counter_tool', 'mwts_vowel_counter_shortcode');
 
 // =========================================================
-// 23. Pomodoro Timer (NEW) - [pomodoro_tool]
+// 23. Pomodoro Timer - [pomodoro_tool]
 // =========================================================
 function mwts_pomodoro_shortcode() {
     ob_start();
@@ -864,7 +939,7 @@ function mwts_pomodoro_shortcode() {
 add_shortcode('pomodoro_tool', 'mwts_pomodoro_shortcode');
 
 // =========================================================
-// 24. Gradient Generator (NEW) - [gradient_gen_tool]
+// 24. Gradient Generator - [gradient_gen_tool]
 // =========================================================
 function mwts_gradient_gen_shortcode() {
     ob_start();
@@ -896,7 +971,7 @@ function mwts_gradient_gen_shortcode() {
 add_shortcode('gradient_gen_tool', 'mwts_gradient_gen_shortcode');
 
 // =========================================================
-// 25. Password Strength Checker (NEW) - [pass_strength_tool]
+// 25. Password Strength Checker - [pass_strength_tool]
 // =========================================================
 function mwts_pass_strength_shortcode() {
     ob_start();
